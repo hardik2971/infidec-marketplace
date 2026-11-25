@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Download } from "lucide-react";
 import type { Order } from "@/lib/db";
-import { paymentMethods } from "@/lib/validation";
+import { paymentMethodLabels } from "@/lib/validation";
 import { inr } from "@/lib/site";
 
 export const formatDate = (iso: string) =>
@@ -61,7 +61,7 @@ export function OrderCard({ order, headingLevel = "h3" }: { order: Order; headin
         </div>
         <div>
           <dt className="text-body">Payment</dt>
-          <dd className="font-medium text-ink">{paymentMethods.find((m) => m.key === order.paymentMethod)?.label ?? order.paymentMethod}</dd>
+          <dd className="font-medium text-ink">{paymentMethodLabels[order.paymentMethod] ?? order.paymentMethod}</dd>
         </div>
       </dl>
     </article>

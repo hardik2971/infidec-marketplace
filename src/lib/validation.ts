@@ -49,11 +49,17 @@ export const indianStates = [
   "Tamil Nadu", "Telangana", "Uttar Pradesh", "Uttarakhand", "West Bengal", "Other",
 ];
 
+/** Razorpay is the only gateway; UPI, cards, net banking and wallets are all chosen inside its checkout popup. */
 export const paymentMethods = [
-  { key: "upi", label: "UPI", hint: "Google Pay, PhonePe, Paytm, BHIM" },
-  { key: "card", label: "Credit / Debit Card", hint: "Visa, Mastercard, RuPay, Amex" },
-  { key: "netbanking", label: "Net Banking", hint: "All major Indian banks" },
-  { key: "razorpay", label: "Razorpay / Stripe", hint: "International cards & wallets" },
+  { key: "razorpay", label: "Razorpay", hint: "UPI, Credit / Debit Card, Net Banking & Wallets" },
 ] as const;
+
+/** Labels for methods recorded on orders placed before checkout moved to Razorpay only. */
+export const paymentMethodLabels: Record<string, string> = {
+  razorpay: "Razorpay",
+  upi: "UPI",
+  card: "Credit / Debit Card",
+  netbanking: "Net Banking",
+};
 
 export const GST_RATE = 0.18;

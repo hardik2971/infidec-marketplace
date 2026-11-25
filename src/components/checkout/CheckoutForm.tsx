@@ -73,7 +73,7 @@ export function CheckoutForm() {
   const { ready, cart, clearCart } = useStore();
   const { lines, subtotal, tax, total } = useCartLines();
   const [b, setB] = useState<Billing>(empty);
-  const [payment, setPayment] = useState("upi");
+  const [payment, setPayment] = useState<string>(paymentMethods[0].key);
   const [terms, setTerms] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [formError, setFormError] = useState("");
@@ -175,10 +175,8 @@ export function CheckoutForm() {
           name: json.razorpay.name || "Infidec Marketplace",
           description: json.razorpay.description,
           order_id: json.razorpay.orderId,
-          prefill: {
-            ...json.razorpay.prefill,
-            method: payment === "upi" ? "upi" : payment === "card" ? "card" : payment === "netbanking" ? "netbanking" : undefined,
-          },
+          // No preselected method: Razorpay shows UPI, cards, net banking and wallets for the customer to pick.
+          prefill: json.razorpay.prefill,
           theme: {
             color: "#16a34a",
           },
@@ -226,7 +224,7 @@ export function CheckoutForm() {
         rzp.on("payment.failed", (failData: unknown) => {
           const desc = (failData as { error?: { description?: string } })?.error?.description;
           setBusy(false);
-          setFormError(desc || "Payment failed. Please choose another payment method.");
+          setFormError(desc || "Payment failed. Please try again or use a different method in the Razorpay window.");
         });
         rzp.open();
         return;
@@ -337,7 +335,7 @@ export function CheckoutForm() {
           <h2 id="payment-title" className="text-lg font-semibold text-ink">
             Payment Method
           </h2>
-          <fieldset className="mt-4 grid gap-3 sm:grid-cols-2" aria-describedby={errors.paymentMethod ? "pay-err" : undefined}>
+          <fieldset className="mt-4 grid gap-3" aria-describedby={errors.paymentMethod ? "pay-err" : undefined}>
             <legend className="sr-only">Choose a payment method</legend>
             {paymentMethods.map((m) => (
               <label
